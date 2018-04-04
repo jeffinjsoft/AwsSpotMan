@@ -1,0 +1,106 @@
+{% extends "dashboard/nav_base.html" %}
+{% block title %}index{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="/dashboard/">Overview</a></li>
+        <li class="active"><a href="/dashboard/stacks/">Stacks <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Export</a></li>
+      </ul>
+    </div>
+
+</div>
+
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+      {% if messages %}
+      <div class="row">
+
+        <div class="container col-sm-12">
+            {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{ message }}</strong>
+
+          {% endfor %}
+            </div>
+             </div>
+
+
+
+      </div>
+      {% endif %}
+      <style>
+      .panel-green {
+    border-color: #5cb85c;
+}
+.panel-green > .panel-heading {
+    border-color: #5cb85c;
+    color: white;
+    background-color: #5cb85c;
+}
+      </style>
+      <div class="panel panel-green">
+                        <div class="panel-heading">
+                            Stack View
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#Sumummary" data-toggle="tab" aria-expanded="true">Sumummary</a>
+                                </li>
+                                <li class=""><a href="#compute" data-toggle="tab" aria-expanded="false">Compute</a>
+                                </li>
+                                <li class=""><a href="#Network" data-toggle="tab" aria-expanded="false">Network</a>
+                                </li>
+                                <li class=""><a href="#Detailed" data-toggle="tab" aria-expanded="false">Detailed</a>
+                                </li>
+                                <li class=""><a href="#spotdetail" data-toggle="tab" aria-expanded="false">Spot Details</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            {% for s in stack %}
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="Sumummary">
+                                    <h4>Name:{{s.name}}</h4>
+                                    <h4>Owner:{{s.owner}}</h4>
+                                    <h4>Instane ID:{{s.instance_id}}</h4>
+                                </div>
+
+                                <div class="tab-pane fade" id="compute">
+                                  <h4>Ami:{{s.ami}}</h4>
+                                  <h4>Region:{{s.region}}</h4>
+                                  <h4>Key Pair:{{s.keypair}}</h4>
+                                </div>
+                                <div class="tab-pane fade" id="Network">
+                                  <h4>Network</h4>
+                                  <p>Security Group:{{s.securitygroup}}</p>
+                                  <p>VPC:{{s.vpc}}</p>
+                                    </div>
+                                <div class="tab-pane fade" id="Detailed">
+                                  <h4>Instance Type:{{s.instancetype}}</h4>
+                                  <h4>Instance Profile:{{s.instance_profile}}</h4>
+                                  <h4>User Data:{{s.userdata}}</h4>
+                                </div>
+                                <div class="tab-pane fade" id="spotdetail">
+                                  <h4>Request ID:{{s.request_id}}</h4>
+                                  <h4>Status:{{s.status}}</h4>
+                                  <h4>Status Code:{{s.status_code}}</h4>
+                                  <h4>Created time:{{s.created_at}}</h4>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

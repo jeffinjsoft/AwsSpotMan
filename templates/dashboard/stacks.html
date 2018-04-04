@@ -1,0 +1,85 @@
+{% extends "dashboard/nav_base.html" %}
+{% block title %}index{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="/dashboard/">Overview</a></li>
+        <li class="active"><a href="/dashboard/stacks/">Stacks <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Export</a></li>
+      </ul>
+    </div>
+
+</div>
+
+<script>
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(300, function(){
+        $(this).remove();
+    });
+}, 4000);
+</script>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+      {% if messages %}
+      <div class="row">
+
+        <div class="container col-sm-12">
+            {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{ message }}</strong>
+
+          {% endfor %}
+            </div>
+             </div>
+
+
+
+      </div>
+      {% endif %}
+      <a href="/dashboard/stacks/add" class="button btn btn-success">Add</a>
+      <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                          <th>#</th>
+                                          <th>Name</th>
+                                          <th>Instance ID</th>
+                                          <th>SpotRequestID</th>
+                                          <th>Status</th>
+                                          <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for s in stacks reversed %}
+                                        <tr>
+                                          <td>{{s.id}}</td>
+                                          <td>{{s.name}}</td>
+                                          <td>{{s.instance_id}}</td>
+                                          <td>{{s.request_id}}</td>
+                                          {% if s.status == 'pending' or s.instance_id == 'null' %}
+                                            <td><a href="/dashboard/stacks/refresh/{{s.id}}/" class="button btn btn-primary">Refresh</a></td>
+                                          {% else %}
+                                            <td>{{s.status}}</td>
+                                          {% endif %}
+                                          <td><a href="/dashboard/stacks/view/{{s.id}}/" class="button btn btn-info">View</a></td>
+                                          {% if s.deleted == 'no' %}
+                                            <td><a href="/dashboard/stacks/view_del/{{s.id}}/" class="button btn btn-danger">Delete</a></td>
+                                          {% else %}
+                                            <td><a href="/dashboard/stacks/start/{{s.id}}" class="button btn btn-success">Start</a></td>
+                                          {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}

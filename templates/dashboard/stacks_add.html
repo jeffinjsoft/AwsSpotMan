@@ -1,0 +1,159 @@
+{% extends "dashboard/nav_base.html" %}
+{% block title %}index{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="/dashboard/">Overview</a></li>
+        <li class="active"><a href="/dashboard/stacks/">Stacks <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Export</a></li>
+      </ul>
+    </div>
+
+</div>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+      {% if form.errors %}
+      	<div class="alert alert-info">
+      		<button type="button" class="close" data-dismiss="alert">×</button>
+      		{% for field in form %}
+      			{% if field.errors %}
+      			<li>{{ field.label }}: {{ field.errors|striptags }}</li>
+      			{% endif %}
+      		{% endfor %}
+      	</div>
+      {% endif %}
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            Handle with care
+                        </div>
+                        <div class="panel-body">
+
+
+<form name = "form" action = "/dashboard/stacks/add/" method = "POST" >{% csrf_token %}
+            <div class="row form-inline">
+              <div class="form-group col-xs-6">
+
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+              </div>
+              <div class="form-group col-xs-6">
+
+                                            <select name ="region" class="form-control">
+                                              <option value="" selected disabled>Region</option>
+                                                {% for choice in region %}
+                                                <option value="{{choice}}">{{choice}}</option>
+                                                {% endfor %}
+                                            </select>
+              </div>
+
+
+
+
+
+    </div>
+    <div class="row form-inline" style="padding-top:10px">
+      <div class="form-group col-xs-6 form-inline">
+
+
+                                      <select name ="vpc" class="form-control">
+                                        <option value="" selected disabled>Vpc</option>
+                                          {% for choice in vpcs %}
+                                          <option value="{{choice}}">{{choice}}</option>
+                                          {% endfor %}
+                                      </select>
+      </div>
+      <div class="form-group col-xs-6 form-inline">
+
+                                      <!-- <label for="sel2">Keyp  </label> -->
+                                      <select name ="keypair" class="form-control">
+                                        <option value="" selected disabled>KeyPair</option>
+                                          {% for choice in keypairs %}
+                                          <option value="{{choice}}">{{choice}}</option>
+                                          {% endfor %}
+                                      </select>
+      </div>
+    </div>
+
+
+    <div class="row form-inline" style="padding-top:10px">
+      <div class="form-group col-xs-6">
+
+        <select name ="sg_group" class="form-control">
+          <option value="" selected disabled>SecurityGroup</option>
+            {% for choice in sg_groups %}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-xs-6">
+
+        <select name ="ami" class="form-control">
+          <option value="" selected disabled>Amis</option>
+            {% for choice in amis %}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="row form-inline" style="padding-top:10px">
+      <div class="form-group col-xs-6">
+
+          <textarea class="form-control" rows="3" name="userdata" placeholder="Userdata"></textarea>
+      </div>
+      <div class="form-group col-xs-6">
+        <select name ="instancetype" class="form-control">
+          <option value="" selected disabled>Instance Type</option>
+            {% for choice in instance_type %}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+
+      </div>
+      <div class="form-group col-xs-6">
+
+        <select name ="instanceprofile" class="form-control">
+          <option value="" selected disabled>Instance Profile</option>
+            {% for choice in instance_profile %}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-inline" style="padding-top:10px">
+      <div class="form-group col-xs-6">
+
+          <input type="text" class="form-control" id="ip" name="ip" placeholder="PublicIP">
+      </div>
+      <div class="form-group col-xs-6">
+
+          <input type="text" class="form-control" id="price" name="spotprice" placeholder="Max spot price">
+      </div>
+    </div>
+
+
+                        </div>
+                        <div class="panel-footer">
+                            <!-- <a href="/dashboard/stacks/add" class="button btn btn-success">Add</a> -->
+                            <button class="button btn btn-success" type = "submit" value = "Create" >
+                  <strong>Create</strong>
+               </button>
+                        </div>
+                      </form>
+
+                    </div>
+              </div>
+            </div>
+
+
+
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
