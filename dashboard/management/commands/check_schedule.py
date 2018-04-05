@@ -46,6 +46,46 @@ def cur_time():
 
     return out
 
+
+def check_times(now,cron):
+    """
+    Check the both times in dict and return true if time matches cron
+    """
+    pass
+
+def do_action(action,stack):
+    """
+    Do the action which scheduled for that stack
+    """
+    out = {
+        'status':'',
+        'message:''
+    }
+
+    if action == 'start':
+        """
+        refer view start
+        """
+        pass
+
+        # return out
+    elif action == 'stop':
+        """
+        refer
+         stop
+        """
+        pass
+
+        # return out
+    else:
+        out['status'] = 'error'
+        out['message'] = 'Action is not valid, delete this schedule'
+        
+        return out
+
+
+
+
 class Command(BaseCommand):
 
 
@@ -62,7 +102,12 @@ class Command(BaseCommand):
         sc = Schedule.objects.all()
         for i in sc:
             c_out = cron_to_time(i.cron)
-            print c_out
+            if check_times(cu_out,c_out):
+                action = do_action(i.action,i.stack)
+                if action['status'] == 'success':
+                    print i.stack.id
+                else:
+                    print action['message']
 
 
         result = {'message': "Successfully completd cron"}
