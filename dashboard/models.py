@@ -31,6 +31,17 @@ class Stacks(models.Model):
        return self.name
 
 
+class Schedule(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    stack = models.ForeignKey(Stacks, on_delete=models.CASCADE)
+    cron = models.CharField(max_length=20)
+    action = models.CharField(max_length=20)
+
+    def __unicode__(self):
+       return self.stack.name + "  " +self.action
+
+
 class Vpc(models.Model):
     vpc_id = models.CharField(max_length=20)
     name = models.CharField(max_length=50)

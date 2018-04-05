@@ -1,0 +1,74 @@
+{% extends "dashboard/nav_base.html" %}
+{% block title %}add{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href="/dashboard/">Overview</a></li>
+        <li><a href="/dashboard/stacks/">Stacks </a></li>
+        <li class="active"><a href="/dashboard/schedule/">Schedule <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Export</a></li>
+      </ul>
+    </div>
+
+</div>
+
+<script>
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(300, function(){
+        $(this).remove();
+    });
+}, 4000);
+</script>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+      {% if messages %}
+      <div class="row">
+
+        <div class="container col-sm-12">
+            {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>{{ message }}</strong>
+
+          {% endfor %}
+            </div>
+             </div>
+
+
+
+      </div>
+      {% endif %}
+      <a href="/dashboard/schedule/add" class="button btn btn-success">Add</a>
+      <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                          <th>#</th>
+                                          <th>Name</th>
+                                          <th>Action</th>
+                                          <th>Time</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for s in schedules reversed %}
+                                      <tr>
+                                        <td>{{s.id}}</td>
+                                        <td>{{s.stack.name}}</td>
+                                        <td>{{s.action}}</td>
+                                        <td>{{s.cron}}</td>
+
+                                      </tr>
+                                      {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}

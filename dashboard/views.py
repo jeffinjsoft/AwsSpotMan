@@ -24,6 +24,34 @@ def index(request):
     no = s.count()
     return render(request, "dashboard/index.html", {'server':no})
 
+
+@login_required(login_url='/login/')
+def schedule_view(request):
+
+    s = models.Schedule.objects.all()
+    return render(request, "dashboard/schedule_view.html", {'schedules':s})
+
+
+@login_required(login_url='/login/')
+def schedule_add_new(request):
+    if request.method == "POST":
+        print request.POST['stack']
+        s = models.Stacks.objects.get(id=request.POST['stack'])
+        sc = models.Schedule(
+            action=request.POST['action'],
+            cron=request.POST['cron'],
+            stack=s)
+        sc.save()
+        return HttpResponseRedirect("/dashboard/schedule/")
+
+
+@login_required(login_url='/login/')
+def schedule_add(request):
+
+    s = models.Stacks.objects.all()
+
+    return render(request, "dashboard/schedule_add.html", {'stacks':s})
+
 @login_required(login_url='/login/')
 def stacks(request):
     s = models.Stacks.objects.all()
