@@ -85,14 +85,15 @@ def stack_start(request,s_id):
              'instanceprofile': s.instance_profile,
              'instancetype': s.instancetype,
              'keypair': s.keypair,
-             'public_ip': s.public_ip,
+             'publicip': s.public_ip,
              'region': s.region,
              'sg_group': s.securitygroup,
              'spotprice': s.max_spot,
              'userdata': s.userdata,
-             'vpc': s.vpc}
+             'vpc': s.vpc,
+             'eip': s.eip}
 
-    print arg
+    # print arg
 
     response = spot_request(arg)
 
@@ -145,6 +146,7 @@ def stacks_add(request):
                 # arg = {}
                 arg = form.cleaned_data
                 # print arg
+                # return HttpResponseRedirect("/dashboard/stacks/")
                 arg['owner'] = request.user
 
                 response = spot_request(arg)
@@ -159,7 +161,11 @@ def stacks_add(request):
 
                 try:
                     ## adding details to DB
-                    s = models.Stacks(name=arg['name'],owner=arg['owner'],region=arg['region'],vpc=arg['vpc'],keypair=arg['keypair'],securitygroup=arg['sg_group'],ami=arg['ami'],userdata=arg['userdata'],instancetype=arg['instancetype'],instance_profile=arg['instanceprofile'],max_spot=arg['spotprice'],public_ip=arg['public_ip'],request_id=response['out'],status_code=response['code'])
+
+                    s = models.Stacks(name=arg['name'],owner=arg['owner'],region=arg['region'],vpc=arg['vpc'],
+                        keypair=arg['keypair'],securitygroup=arg['sg_group'],ami=arg['ami'],userdata=arg['userdata'],
+                        instancetype=arg['instancetype'],instance_profile=arg['instanceprofile'],max_spot=arg['spotprice'],
+                        public_ip=arg['publicip'],request_id=response['out'],status_code=response['code'])
                     s.save()
                     messages.success(request, response['message'])
                 except:

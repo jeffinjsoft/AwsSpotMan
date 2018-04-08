@@ -6,9 +6,9 @@ from django.core.management import call_command
 
 import json
 
-from boto3_helper import check_amis,check_profiles,check_types,check_keys,check_regions,check_sgs,check_vpcs
+from boto3_helper import check_amis,check_profiles,check_types,check_keys,check_regions,check_sgs,check_vpcs,check_eips,check_volumes
 
-all_options = ['amis','profiles','types','keys','regions','sgs','vpcs']
+all_options = ['amis','profiles','types','keys','regions','sgs','vpcs','eips','volumes']
 
 def check_v(options):
     o_l = []
@@ -41,6 +41,10 @@ def check_v(options):
         check_sgs()
     if 'vpcs' in o_l:
         check_vpcs()
+    if 'eips' in o_l:
+        check_eips()
+    if 'volumes' in o_l:
+        check_volumes()
 
 class Command(BaseCommand):
 

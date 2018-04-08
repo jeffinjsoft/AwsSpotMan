@@ -1,7 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 
-from dashboard.models import Ami,InstanceProfile,Vpc,Sgroup,InstanceType,Region,Keypair
+from dashboard.models import Ami,InstanceProfile,Vpc,Sgroup,InstanceType,Region,Keypair,Eip,Volume
 
 def check_amis(a_id):
     """
@@ -197,3 +197,74 @@ def check_vpcs():
                 m = Vpc(vpc_id=v,name=a[v])
                 m.save()
         print 'Successfully added VPCS'
+
+
+def check_eips():
+    """
+    check for all elastic ips and update models
+    """
+
+    # find instance profiles using boto3
+    try:
+        eip_client = boto3.client('ec2')
+        response = eip_client.describe_addresses()
+    except ClientError as e:
+        print e
+    e_out = []
+
+    for i in response['Addresses']:
+        t = {}
+        t[i['PublicIp']]=i['NetworkInterfaceId']
+        e_out.append(t)
+
+
+    if len(e_out) == 0:
+        print 'No elastic ips found.'
+    else:
+        # delete all amis from DB
+        InstanceProfile.objects.all().delete()
+        #save new vales
+
+        for a in e_out:
+            for v in a:
+                m = Eip(ip=v,inter_id=a[v])
+                m.save()
+        print 'Successfully added eips'
+
+
+def check_volumes():
+    """
+    check for all volumes and update models
+    """
+
+    # find instance profiles using boto3
+    try:
+        v_client = boto3.client('ec2')
+        response = v_client.describe_volumes()
+    except ClientError as e:
+        print e
+    # v_out = []
+
+    # for i in response['Volumes']:
+    #     t = {}
+    #     print i
+    #     e_out.append(t)
+
+
+    if len(response['Volumes']) == 0:
+        print 'No elastic ips found.'
+    else:
+        # delete all amis from DB
+        Volume.objects.all().delete()
+        #save new vales
+
+        for a in response['Volumes']:
+            print a['VolumeId']
+            if len(a['Attachments'])>0:
+                m = Volume(vid=a['VolumeId'],instance_id=a['Attachments'][0]['InstanceId'],a_zone=a['AvailabilityZone'],snap_id=a['SnapshotId'],state=a['State'])
+            else:
+                m = Volume(vid=a['VolumeId'],a_zone=a['AvailabilityZone'],snap_id=a['SnapshotId'],state=a['State'])
+            m.save()
+
+        print 'Successfully added volumes'
+        # pass

@@ -27,6 +27,11 @@ def get_stack_choices():
     inst_p = models.InstanceProfile.objects.all()
     inst_p_list = [r.name for r in inst_p]
 
+    eip = models.Eip.objects.all()
+    eips = [r.ip for r in eip]
+    v = models.Volume.objects.all()
+    volumes = [r.vid for r in v]
+
     choice = {}
     choice['form'] = form
     choice['region'] = region_list
@@ -36,6 +41,8 @@ def get_stack_choices():
     choice['amis'] = ami_list
     choice['instance_type'] = inst_list
     choice['instance_profile'] = inst_p_list
+    choice['eips'] = eips
+    choice['volumes'] = volumes
     return choice
 
 
@@ -121,7 +128,12 @@ def terminate_instance(in_id):
 def spot_request(arg):
 
     spot_out = {}
+    """
+    Need to add BlockDurationMinutes
+    EIP with network interface id NetworkInterfaceId
+    'PrivateIpAddresses'
 
+    """
     #
     # spot_out['status'] = 'error'
     # spot_out['out'] = 'access error'
@@ -161,21 +173,40 @@ def spot_request(arg):
     if spot_price['status'] == 'success' and float(spot_price['price']) <= float(arg['spotprice']):
 
         client = boto3.client('ec2')
+        l_s = {
+            'NetworkInterfaces':[{'SubnetId':sub_id,'DeviceIndex':0,'Groups':s_ids}],
+            'IamInstanceProfile': {
+                'Name': arg['instanceprofile']
+            },
+            'ImageId': ami,
+            'InstanceType':arg['instancetype'],
+            'KeyName': arg['keypair'],
+            'UserData': b_encoded
+        }
+
+
+
+        if arg['publicip'] == 'yes' or arg['publicip'] == 'no':
+            if arg['publicip'] == 'yes':
+                l_s['NetworkInterfaces'][0]['AssociatePublicIpAddress'] = True
+            else:
+                l_s['NetworkInterfaces'][0]['AssociatePublicIpAddress'] = False
+        if arg['eip'] != '':
+            """
+            need to assosiate EIP after instance request
+            """
+            pass
+
+        if arg['volume'] != '':
+            print 'vol man'
+
+
         try:
             response = client.request_spot_instances(
                 ClientToken=id_generator(),
                 DryRun=False,
                 InstanceCount=1,
-                LaunchSpecification={
-                    'NetworkInterfaces':[{'SubnetId':sub_id,'DeviceIndex':0,'Groups':s_ids}],
-                    'IamInstanceProfile': {
-                        'Name': arg['instanceprofile']
-                    },
-                    'ImageId': ami,
-                    'InstanceType':arg['instancetype'],
-                    'KeyName': arg['keypair'],
-                    'UserData': b_encoded
-                },
+                LaunchSpecification=l_s,
                 SpotPrice=spot_price['price'],
             )
             print 'Requested'
