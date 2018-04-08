@@ -13,4 +13,6 @@ class StackForm(forms.Form):
     instanceprofile = forms.CharField()
     spotprice = forms.CharField()
     userdata = forms.CharField(required=False)
-    public_ip = forms.CharField(required=False)
+    publicip = forms.CharField()
+    eip = forms.CharField(required=False)
+    volume = forms.CharField(required=False)

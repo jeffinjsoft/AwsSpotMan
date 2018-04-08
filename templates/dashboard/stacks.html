@@ -68,7 +68,11 @@ window.setTimeout(function() {
                                           {% endif %}
                                           <td><a href="/dashboard/stacks/view/{{s.id}}/" class="button btn btn-info">View</a></td>
                                           {% if s.deleted == 'no' %}
-                                            <td><a href="/dashboard/stacks/view_del/{{s.id}}/" class="button btn btn-danger">Delete</a></td>
+                                            {% if s.instance_id == 'null' %}
+                                              <td><a href="/dashboard/stacks/view_del/{{s.id}}/" class="button btn btn-danger disabled">Delete</a></td>
+                                            {% else %}
+                                              <td><a href="/dashboard/stacks/view_del/{{s.id}}/" class="button btn btn-danger">Delete</a></td>
+                                            {% endif %}
                                           {% else %}
                                             <td><a href="/dashboard/stacks/start/{{s.id}}" class="button btn btn-success">Start</a></td>
                                           {% endif %}
